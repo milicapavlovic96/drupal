@@ -1,8 +1,6 @@
+{{ word | raw}}
 <ul>
 {% for product in items %}
-    <li> {{ product.title }} </li>
-    <li> {{ product.description }} </li>
-    <li> {{ product.image }} </li>
-
+     <li>{{ product }}</li>
 {% endfor %}
 </ul>
