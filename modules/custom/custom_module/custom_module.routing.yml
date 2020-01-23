@@ -2,6 +2,6 @@ custom_module.product_list:
   path: '/productlists'
   defaults:
     _title: 'Product list'
-    _controller: '\Drupal\custom_module\Controller\ProductController::page'
+    _controller: '\Drupal\custom_module\Controller\ProductController::product'
   requirements:
     _permission: 'access content'

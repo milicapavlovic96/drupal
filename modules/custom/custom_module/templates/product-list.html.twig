@@ -1,5 +1,10 @@
-<ul>
+<p>Search by title:</p>
+<input type="text" name="token" value="mica">
+<br/>
+<br/>
+{{ items.title }}
+{{ items.description }}
+{{ items.title.value }}
 {% for product in items %}
-     <li>{{ product }}</li>
+     <li>{{ product.title }}</li>
 {% endfor %}
-</ul>
