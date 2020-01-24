@@ -36,6 +36,7 @@ class ProductController extends ControllerBase {
 
     public function product(){
         $products = $this->getData();
+        
         return array(
             '#theme' => 'product_list',
             '#items' => $products,
@@ -70,4 +71,5 @@ class ProductController extends ControllerBase {
       }
       return $filter;
   }
+
 }

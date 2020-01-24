@@ -5,3 +5,11 @@ custom_module.product_list:
     _controller: '\Drupal\custom_module\Controller\ProductController::product'
   requirements:
     _permission: 'access content'
+
+custom_module.custom_form:
+  path:  '/admin/config/system/test-form'
+  defaults:
+    _form: Drupal\custom_module\Form\customForm
+    _title: 'Product list'
+  requirements:
+    _permission: 'configure_form'

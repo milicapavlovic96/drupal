@@ -1,0 +1,5 @@
+custom_module.test_form:
+  title: 'Test Form'
+  description: 'Set the Default Count variable'
+  route_name: custom_module.test_form
+  parent: system.admin_config_system
