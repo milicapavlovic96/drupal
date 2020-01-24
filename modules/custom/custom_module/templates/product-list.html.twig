@@ -2,9 +2,14 @@
 <input type="text" name="token" value="mica">
 <br/>
 <br/>
-{{ items.title }}
-{{ items.description }}
-{{ items.title.value }}
 {% for product in items %}
-     <li>{{ product.title }}</li>
+    
+     <h3>{{ product.title }}</h3>
+     
+     <h5>Description:</h5> {{ product.description | raw}}
+    
+     <img class="top-article-image" src="{{ file_url(product.image) }}"/>
+     
+     <hr>
 {% endfor %}
+    

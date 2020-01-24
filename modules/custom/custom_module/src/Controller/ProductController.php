@@ -1,5 +1,4 @@
 <?php
-
 namespace Drupal\custom_module\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -8,7 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use \stdClass;
-
+use Drupal\image\Entity\ImageStyle;
 
 class ProductController extends ControllerBase {
 
@@ -39,18 +38,22 @@ class ProductController extends ControllerBase {
         );
     }
 
-public function getData(){
-    $nids = $this->entityQuery->get('node')->condition('type', 'product')->execute();
-    $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
+    public function getData(){
+        $nids = $this->entityQuery->get('node')->condition('type', 'product')->execute();
+        $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
 
-    foreach($items as $item){
-        $title= $item->title->getValue()[0]['value'];
-        $image= $item->field_images->getValue();
-        $description= $item->field_description->getValue()[0]['value'];  
+        foreach($items as $item){
+            $title= $item->title->getValue()[0]['value'];
+            $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
+            $description= $item->field_description->getValue()[0]['value'];  
+
+            $product = array(
+              'title'=> $title,  
+              'description'=> $description,
+              'image' => $image
+            );
+            $products[]=$product;
+        }
+        return $products;
     }
-    return array(
-      'title'=> $title,  
-      'description'=> $description
-    );
-}
 }
