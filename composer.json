@@ -65,7 +65,7 @@
                 "      https://www.drupal.org/getting-involved",
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
-            ]
+			]
         }
-    }
+}
 }

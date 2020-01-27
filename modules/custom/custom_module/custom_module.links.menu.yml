@@ -2,4 +2,3 @@ custom_module.custom_form:
   title: 'Custom Form'
   description: 'Set the Default Count variable'
   route_name: custom_module.custom_form
-  parent: system.admin_config_system
