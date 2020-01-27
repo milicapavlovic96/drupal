@@ -7,9 +7,9 @@ custom_module.product_list:
     _permission: 'access content'
 
 custom_module.custom_form:
-  path:  '/admin/config/system/test-form'
+  path: /admin/config/system/custom-form
   defaults:
-    _form: Drupal\custom_module\Form\customForm
-    _title: 'Product list'
+    _form: 'Drupal\custom_module\Form\CustomForm'
+    _title: 'Custom Form'
   requirements:
     _permission: 'configure_form'

@@ -18,7 +18,6 @@ class ProductController extends ControllerBase {
     protected $request_stack;
     protected $filter;
 
-
     public static function create(ContainerInterface $container) {
         return new static(
         $container->get('entity.query'),
@@ -31,7 +30,7 @@ class ProductController extends ControllerBase {
         $this->entityQuery = $entityQuery;
         $this->entityTypeManager = $entityTypeManager;
         $this->request_stack = $request_stack->getCurrentRequest();
-       $this->filter='cvet';
+        $this->filter='cvet';
       }
 
     public function product(){
@@ -45,8 +44,9 @@ class ProductController extends ControllerBase {
     }
 
     public function getData(){
-      $filter= $this->yourAction();
-        $nids = $this->entityQuery->get('node')->condition('type', 'product')->condition('title',$filter,'CONTAINS')->execute();
+        $config = $this->config('custom_module.settings');
+        $filter= $this->yourAction();
+        $nids = $this->entityQuery->get('node')->condition('type', 'product')->condition('title',$filter,'CONTAINS')->pager($config->get('default_count'))->execute();
         $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
 
         foreach($items as $item){
