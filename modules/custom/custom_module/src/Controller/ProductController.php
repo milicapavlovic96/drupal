@@ -52,7 +52,9 @@ class ProductController extends ControllerBase {
         foreach($items as $item){
             $title= $item->title->getValue()[0]['value'];
             $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
-            $description= $item->field_description->getValue()[0]['value'];  
+            $description= $item->field_description->getValue()[0]['value'];  -
+            $field_tags= $item->get('field_tags1');  
+
 
             $product = array(
               'title'=> $title,  
