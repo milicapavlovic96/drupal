@@ -34,35 +34,25 @@ class ProductController extends ControllerBase {
       }
 
     public function product(){
-        $products = $this->getData();
-        
+      $products = $this->getData();
+      $allTags= $this->getAllTags();
+
         return array(
             '#theme' => 'product_list',
-            '#items' => $products,
-            '#title' => 'Product list'
-        );
+            '#items' => array('allProducts' => $products, 'allTags' =>$allTags),
+            '#title' => 'Product list' 
+          );
     }
 
     public function getData(){
         $config = $this->config('custom_module.settings');
         $filter= $this->yourAction();
-        $nids = $this->entityQuery->get('node')->condition('type', 'product')->condition('title',$filter,'CONTAINS')->pager($config->get('default_count'))->execute();
+        $selectedTag= $this-> selectedTag();
+        $nes=$this->entityQuery->get('node');
+        $nids = $this->entityQuery->get('node')->condition('type', 'product')->condition('field_tags1.entity.name', $selectedTag, 'CONTAINS')->condition('title',$filter,'CONTAINS')->pager($config->get('default_count'))->execute();
         $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
-
-        foreach($items as $item){
-            $title= $item->title->getValue()[0]['value'];
-            $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
-            $description= $item->field_description->getValue()[0]['value'];  -
-            $field_tags= $item->get('field_tags1');  
-
-
-            $product = array(
-              'title'=> $title,  
-              'description'=> $description,
-              'image' => $image
-            );
-            $products[]=$product;
-        }
+        $products= $this-> getProducts($items);
+        
         return $products;
     }
 
@@ -74,4 +64,53 @@ class ProductController extends ControllerBase {
       return $filter;
   }
 
+  public function selectedTag(){
+    $selectedTag=$this->request_stack->get('selected');
+    if($selectedTag==null){
+      $selectedTag='';
+      }
+      return $selectedTag;
+  }
+
+  //Tagovi prosledjenog node-a
+  public function getNodeTags($item){
+    $field_tags=$item->field_tags1->referencedEntities();
+    $tags=[];  
+    foreach($field_tags as $tag){
+      $term_obj = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tag->tid->getValue()[0]['value']);
+      $name=$term_obj->getName();
+      $tags[]=$name;
+    }
+    return $tags;
+  }
+
+  //Svi tagovi za dropdown listu
+  public function getAllTags(){
+    $tags= \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('tags');
+    $tags_list=[null];
+        foreach ($tags as $term) { 
+          $term_obj = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->tid);
+          $name=$term_obj->getName();
+          $tags_list[]=$name;
+    }
+  return $tags_list;
+}
+
+  public function getProducts($items){
+    foreach($items as $item){
+      $title= $item->title->getValue()[0]['value'];
+      $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
+      $description= $item->field_description->getValue()[0]['value'];
+      $field_tags= $this->getNodeTags($item);
+
+      $product = array(
+        'title'=> $title,  
+        'description'=> $description,
+        'image' => $image,
+        'tags' => $field_tags
+      );
+      $products[]=$product;
+    }
+    return $products;
+  }
 }

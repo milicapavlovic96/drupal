@@ -1,11 +1,18 @@
+<br/>
+<br/>
 <form action="/productlists" method="get">
-<p>Search by title:</p>
-<input type="text" name="token" value="" placeholder="Search">
-<input type="submit" value="submit" />
+          <h5> Izaberi tag: </h5>
+          <select id="edit-type" name="selected" class="form-select">
+                    {% for tag in items.allTags %}
+                    <option selected="selected" value={{ tag }} >{{ tag }}</option>
+                    {% endfor %}
+          </select>
+     <p>Unesi title:</p>
+     <input type="text" name="token" value="" placeholder="Search">
+     <input type="submit" value="submit" />
 </form>
 <br/>
-<br/>
-{% for product in items %}
+{% for product in items.allProducts %}
     
      <h3>{{ product.title }}</h3>
      
@@ -13,6 +20,12 @@
     
      <img class="top-article-image" src="{{ file_url(product.image) }}"/>
      
+     <h5>Tags:</h5>
+          {% for tag in product.tags %}
+               {{ tag }}
+          {% endfor %}
      <hr>
 {% endfor %}
+
+
     
