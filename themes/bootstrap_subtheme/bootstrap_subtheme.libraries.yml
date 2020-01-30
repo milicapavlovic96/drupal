@@ -3,6 +3,11 @@ framework:
     theme:
       css/style.css: {}
 
+global-styling:
+  css:
+    theme:
+      css/style.css: {}
+
 # Uncomment for LESS source JavaScript files.
 #  js:
 #    bootstrap/js/affix.js: {}

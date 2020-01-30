@@ -1,7 +1,8 @@
+  <h5> Hello: </h5> 
 <br/>
 <br/>
 <form action="/productlists" method="get">
-          <h5> Izaberi tag: </h5>
+           <h5> Izaberi tag: </h5>  
           <select id="edit-type" name="selected" class="form-select">
                     {% for tag in items.allTags %}
                     <option selected="selected" value={{ tag }} >{{ tag }}</option>
@@ -13,8 +14,8 @@
 </form>
 <br/>
 {% for product in items.allProducts %}
-    
-     <h3>{{ product.title }}</h3>
+   
+     <h3>{{ product.title}}</h3>
      
      <h5>Description:</h5> {{ product.description | raw}}
     
@@ -22,7 +23,7 @@
      
      <h5>Tags:</h5>
           {% for tag in product.tags %}
-               {{ tag }}
+               {{ tag | t}}
           {% endfor %}
      <hr>
 {% endfor %}

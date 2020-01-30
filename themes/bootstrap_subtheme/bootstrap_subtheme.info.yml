@@ -22,3 +22,6 @@ regions:
 libraries-extend:
   bootstrap/framework:
     - bootstrap_subtheme/framework
+
+libraries:
+  - 'bootstrap_subtheme/global-styling'
