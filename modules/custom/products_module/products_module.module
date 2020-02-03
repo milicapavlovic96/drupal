@@ -7,7 +7,7 @@ use Drupal\image\Entity\ImageStyle;
 *Implementing hook theme, article list name of theme function
 */
 
-function custom_module_theme($existing, $type, $theme, $path){
+function products_module_theme($existing, $type, $theme, $path){
 
     return array(
         'product_list' => array(
@@ -16,7 +16,7 @@ function custom_module_theme($existing, $type, $theme, $path){
     );
 }
 
-function custom_module_preprocess_node__product(&$variables) {
+function products_module_preprocess_node__product(&$variables) {
     $nids = \Drupal::entityQuery('node')->condition('type', 'product')
     ->condition('field_parent.entity', 'value', 'IS NULL')->execute();
 

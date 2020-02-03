@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\custom_module\Controller;
+namespace Drupal\products_module\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -48,7 +48,7 @@ class ProductController extends ControllerBase {
      * Ovde getujemo listu proizvoda. Prvi pozivamo metode koje kupe filtere (ako ih ima), a onda getujemo proizvode uz pomoć entityQuery-a.
      */
     public function getAllProducts(){
-        $config = $this->config('custom_module.settings');
+        $config = $this->config('products_module.settings');
         $filter= $this->titleFilter();
         $selectedTag= $this-> selectedTag();
         $nids = $this->entityQuery->get('node')->condition('type', 'product')
@@ -66,7 +66,7 @@ class ProductController extends ControllerBase {
      * Pretraga proizvoda po nazivu, ovde getujemo tekst koji je korisnik uneo
      */
     public function titleFilter(){
-      $filter=$this->request_stack->get('search_title');
+      $filter=$this->request_stack->get('title_filter');
       if($filter==null){
       $filter='';
       }
@@ -91,7 +91,7 @@ class ProductController extends ControllerBase {
     $field_tags=$item->field_tags1->referencedEntities();
     $tags=[];  
     foreach($field_tags as $tag){
-      $term_obj = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tag->tid->getValue()[0]['value']);
+      $term_obj = $this->entityTypeManager->getStorage('taxonomy_term')->load($tag->tid->getValue()[0]['value']);
       $name=$term_obj->getName();
       $tags[]=$name;
     }
@@ -102,10 +102,10 @@ class ProductController extends ControllerBase {
    * Getujemo sve dostupne tagove za dropdown listu
    */ 
   public function getAllTags(){
-    $tags= \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('tags');
+    $tags= $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('tags');
     $tags_list=[null];
         foreach ($tags as $term) { 
-          $term_obj = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->tid);
+          $term_obj = $this->entityTypeManager->getStorage('taxonomy_term')->load($term->tid);
           $name=$term_obj->getName();
           $tags_list[]=$name;
     }

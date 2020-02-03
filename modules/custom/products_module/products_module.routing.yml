@@ -1,15 +1,15 @@
-custom_module.product_list:
+products_module.product_list:
   path: '/productlists'
   defaults:
     _title: 'Product list'
-    _controller: '\Drupal\custom_module\Controller\ProductController::product'
+    _controller: '\Drupal\products_module\Controller\ProductController::product'
   requirements:
     _permission: 'configure_form'
 
-custom_module.custom_form:
+products_module.custom_form:
   path: /admin/config/system/custom-form
   defaults:
-    _form: 'Drupal\custom_module\Form\CustomForm'
+    _form: 'Drupal\products_module\Form\CustomForm'
     _title: 'Custom Form'
   requirements:
     _permission: 'configure_form'

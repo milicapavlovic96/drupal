@@ -1,4 +1,4 @@
-d8_example_module.settings:
+products_module.settings:
   type: mapping
   label: 'D8 Example Module settings'
   mapping:

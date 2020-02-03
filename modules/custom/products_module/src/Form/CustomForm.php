@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\custom_module\Form;
+namespace Drupal\products_module\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,7 +11,7 @@ class CustomForm extends ConfigFormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('custom_module.settings');
+    $config = $this->config('products_module.settings');
 
     $form['default_count'] = [
       '#type' => 'number',
@@ -22,13 +22,13 @@ class CustomForm extends ConfigFormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config('custom_module.settings');
+    $config = $this->config('products_module.settings');
     $config->set('default_count', $form_state->getValue('default_count'));
     $config->save();
     parent::submitForm($form, $form_state);
   }
 
   protected function getEditableConfigNames() {
-    return ['custom_module.settings'];
+    return ['products_module.settings'];
   }
 }

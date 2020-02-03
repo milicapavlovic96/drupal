@@ -1,4 +1,4 @@
-name: Custom module with template and controller
+name: Product module
 description: Module with controller and template
 type: module
 core: 8.x
