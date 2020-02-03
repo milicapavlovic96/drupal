@@ -2,7 +2,7 @@ core: 8.x
 type: theme
 base theme: bootstrap
 
-name: 'Bootstrap subtheme'
+name: 'Products theme'
 description: 'This is Bootstrap Subtheme'
 package: 'Bootstrap'
 
@@ -21,7 +21,7 @@ regions:
 
 libraries-extend:
   bootstrap/framework:
-    - bootstrap_subtheme/framework
+    - products_theme/framework
 
 libraries:
-  - 'bootstrap_subtheme/global-styling'
+  - 'products_theme/global-styling'

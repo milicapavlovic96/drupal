@@ -2,13 +2,13 @@
 <br/>
 <form action="/productlists" method="get">
            <h5> Izaberi tag: </h5>  
-          <select id="edit-type" name="selected" class="form-select">
+          <select id="edit-type" name="selectedTag" class="form-select">
                     {% for tag in items.allTags %}
                     <option selected="selected" value={{ tag }} >{{ tag }}</option>
                     {% endfor %}
           </select>
      <p>Unesi title:</p>
-     <input type="text" name="token" value="" placeholder="Search">
+     <input type="text" name="search_title" value="" placeholder="Search">
      <input type="submit" value="submit" />
 </form>
 <br/>

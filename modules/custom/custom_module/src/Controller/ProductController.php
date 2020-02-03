@@ -34,7 +34,7 @@ class ProductController extends ControllerBase {
       }
 
     public function product(){
-      $products = $this->getData();
+      $products = $this->getAllProducts();
       $allTags= $this->getAllTags();
 
         return array(
@@ -44,34 +44,49 @@ class ProductController extends ControllerBase {
           );
     }
 
-    public function getData(){
+    /**
+     * Ovde getujemo listu proizvoda. Prvi pozivamo metode koje kupe filtere (ako ih ima), a onda getujemo proizvode uz pomoć entityQuery-a.
+     */
+    public function getAllProducts(){
         $config = $this->config('custom_module.settings');
-        $filter= $this->yourAction();
+        $filter= $this->titleFilter();
         $selectedTag= $this-> selectedTag();
-        $nids = $this->entityQuery->get('node')->condition('type', 'product')->condition('field_tags1.entity.name', $selectedTag, 'CONTAINS')->condition('title',$filter,'CONTAINS')->pager($config->get('default_count'))->execute();
+        $nids = $this->entityQuery->get('node')->condition('type', 'product')
+        ->condition('field_tags1.entity.name', $selectedTag, 'CONTAINS')
+        ->condition('title',$filter,'CONTAINS')
+        ->pager($config->get('default_count'))
+        ->execute();
         $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
         $products= $this-> getProducts($items);
         
         return $products;
     }
 
-    public function yourAction(){
-      $filter=$this->request_stack->get('token');
+    /**
+     * Pretraga proizvoda po nazivu, ovde getujemo tekst koji je korisnik uneo
+     */
+    public function titleFilter(){
+      $filter=$this->request_stack->get('search_title');
       if($filter==null){
       $filter='';
       }
       return $filter;
   }
 
+  /**
+   * Filtiramo proizvode prema tagovima koje sadrže. Ovde getujemo tag koji je korisnik izabrao na dropdown listi
+   */
   public function selectedTag(){
-    $selectedTag=$this->request_stack->get('selected');
+    $selectedTag=$this->request_stack->get('selectedTag');
     if($selectedTag==null){
       $selectedTag='';
-      }
+    }
       return $selectedTag;
   }
 
-  //Tagovi prosledjenog node-a
+  /**
+   * Tagovi prosledjenog node-a
+   */
   public function getNodeTags($item){
     $field_tags=$item->field_tags1->referencedEntities();
     $tags=[];  
@@ -83,7 +98,9 @@ class ProductController extends ControllerBase {
     return $tags;
   }
 
-  //Svi tagovi za dropdown listu
+  /**
+   * Getujemo sve dostupne tagove za dropdown listu
+   */ 
   public function getAllTags(){
     $tags= \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('tags');
     $tags_list=[null];
@@ -95,11 +112,14 @@ class ProductController extends ControllerBase {
   return $tags_list;
 }
 
+  /**
+   * Ovde iz svakog učitanog item-a uzimamo potrebne podatke. Vraćamo niz proizvoda. 
+   */
   public function getProducts($items){
     foreach($items as $item){
-      $title= $item->title->getValue()[0]['value'];
+      $title= $item->title->value;
       $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
-      $description= $item->field_description->getValue()[0]['value'];
+      $description= $item->get('field_description')->value;
       $field_tags= $this->getNodeTags($item);
 
       $product = array(
