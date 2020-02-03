@@ -1,0 +1,9 @@
+<div >
+{% for product in products %}
+{% if node.label == product.title %}
+    <h3>{{ product.title}}</h3>
+    <h5>Description:</h5> {{ product.description | raw}}
+    <img class="top-article-image" src="{{ file_url(product.image) }}"/>    
+{% endif %}
+{% endfor %}
+</div> 

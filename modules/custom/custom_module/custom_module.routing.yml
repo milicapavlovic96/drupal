@@ -4,7 +4,7 @@ custom_module.product_list:
     _title: 'Product list'
     _controller: '\Drupal\custom_module\Controller\ProductController::product'
   requirements:
-    _permission: 'access content'
+    _permission: 'configure_form'
 
 custom_module.custom_form:
   path: /admin/config/system/custom-form

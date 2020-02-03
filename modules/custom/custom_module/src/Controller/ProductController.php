@@ -48,7 +48,6 @@ class ProductController extends ControllerBase {
         $config = $this->config('custom_module.settings');
         $filter= $this->yourAction();
         $selectedTag= $this-> selectedTag();
-        $nes=$this->entityQuery->get('node');
         $nids = $this->entityQuery->get('node')->condition('type', 'product')->condition('field_tags1.entity.name', $selectedTag, 'CONTAINS')->condition('title',$filter,'CONTAINS')->pager($config->get('default_count'))->execute();
         $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
         $products= $this-> getProducts($items);

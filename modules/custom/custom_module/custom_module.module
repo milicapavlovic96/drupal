@@ -1,5 +1,8 @@
 <?php
 
+use Drupal\image\Entity\ImageStyle;
+
+
 /**
 *Implementing hook theme, article list name of theme function
 */
@@ -11,4 +14,20 @@ function custom_module_theme($existing, $type, $theme, $path){
             'variables' => array('items' => array(),'title' => '')
         )
     );
+}
+
+function custom_module_preprocess_node__product(&$variables) {
+    $nids = \Drupal::entityQuery('node')->condition('type', 'product')
+    ->condition('field_parent.entity', 'value', 'IS NULL')->execute();
+
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+    foreach($nodes as $item){
+        $title= $item->title->getValue()[0]['value'];
+        $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
+        $description= $item->field_description->getValue()[0]['value'];
+        $variable['title'] = $title;
+        $variable['image'] = $image;
+        $variable['description'] =$description;
+        $variables['products'][]=$variable;
+}
 }

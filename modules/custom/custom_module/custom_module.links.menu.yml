@@ -1,10 +1,14 @@
-custom_module.product_list:
-  title: 'Product list'
-  description: 'List of all products'
-  route_name: custom_module.product_list
-  menu_name: main
-
 custom_module.custom_form:
   title: 'Custom Form'
   description: 'Set the Default Count variable'
   route_name: custom_module.custom_form
+  menu_name: main
+
+custom_module.product_list:
+  title: 'Product'
+  description: 'List of all products'
+  route_name: custom_module.product_list
+  menu_name: main
+  weight: 100
+
+
