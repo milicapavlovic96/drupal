@@ -12,67 +12,91 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ProductController extends ControllerBase {
 
-    protected $entityQuery;
-    protected $entityTypeManager;
-    protected $submittedToken;
-    protected $request_stack;
-    protected $filter;
+  protected $entityQuery;
+  protected $entityTypeManager;
+  protected $submittedToken;
+  protected $request_stack;
+  protected $filter;
 
-    public static function create(ContainerInterface $container) {
-        return new static(
-        $container->get('entity.query'),
-        $container->get('entity_type.manager'),
-        $container->get('request_stack')
-        );
-      }
-    
-    public function __construct(QueryFactory $entityQuery, EntityTypeManagerInterface $entityTypeManager, RequestStack $request_stack) {
-        $this->entityQuery = $entityQuery;
-        $this->entityTypeManager = $entityTypeManager;
-        $this->request_stack = $request_stack->getCurrentRequest();
-        $this->filter='cvet';
-      }
-
-    public function product(){
-      $products = $this->getAllProducts();
-      $allTags= $this->getAllTags();
-
-        return array(
-            '#theme' => 'product_list',
-            '#items' => array('allProducts' => $products, 'allTags' =>$allTags),
-            '#title' => 'Product list' 
-          );
-    }
-
-    /**
-     * Ovde getujemo listu proizvoda. Prvi pozivamo metode koje kupe filtere (ako ih ima), a onda getujemo proizvode uz pomoć entityQuery-a.
-     */
-    public function getAllProducts(){
-        $config = $this->config('products_module.settings');
-        $filter= $this->titleFilter();
-        $selectedTag= $this-> selectedTag();
-        $nids = $this->entityQuery->get('node')->condition('type', 'product')
-        ->condition('field_tags1.entity.name', $selectedTag, 'CONTAINS')
-        ->condition('title',$filter,'CONTAINS')
-        ->pager($config->get('default_count'))
-        ->execute();
-        $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
-        $products= $this-> getProducts($items);
-        
-        return $products;
-    }
-
-    /**
-     * Pretraga proizvoda po nazivu, ovde getujemo tekst koji je korisnik uneo
-     */
-    public function titleFilter(){
-      $filter=$this->request_stack->get('title_filter');
-      if($filter==null){
-      $filter='';
-      }
-      return $filter;
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.query'),
+      $container->get('entity_type.manager'),
+      $container->get('request_stack')
+    );
+  }
+  
+  public function __construct(QueryFactory $entityQuery, EntityTypeManagerInterface $entityTypeManager, RequestStack $request_stack) {
+    $this->entityQuery = $entityQuery;
+    $this->entityTypeManager = $entityTypeManager;
+    $this->request_stack = $request_stack->getCurrentRequest();
+    $this->filter='cvet';
   }
 
+  public function product(){
+    $products = $this->getAllProducts();
+    $allTags= $this->getAllTags();
+
+      return array(
+          '#theme' => 'product_list',
+          '#items' => array('allProducts' => $products, 'allTags' =>$allTags),
+          '#title' => 'Product list',
+          '#pager' => [
+            '#type' => 'pager'
+          ]
+        );
+  }
+  /**
+   * Ovde getujemo listu proizvoda. Prvi pozivamo metode koje kupe filtere (ako ih ima), a onda getujemo proizvode uz pomoć entityQuery-a.
+   */
+  public function getAllProducts(){
+    $config = $this->config('products_module.settings');
+    $filter= $this->titleFilter();
+    $selectedTag= $this-> selectedTag();
+    if($filter!='' && $selectedTag!=''){
+      $nids = $this->entityQuery->get('node')->condition('type', 'product')
+          ->condition('field_tags1.entity.name', $selectedTag, 'CONTAINS')
+          ->condition('title',$filter,'CONTAINS')
+          ->pager($config->get('productsPerPage'))
+          ->execute();
+    }
+    else if($filter!='' && $selectedTag==''){
+      $nids = $this->entityQuery->get('node')->condition('type', 'product')
+          ->condition('title',$filter,'CONTAINS')
+          ->pager($config->get('productsPerPage'))
+          ->execute();
+    }
+    else if($filter=='' && $selectedTag!=''){
+      $nids = $this->entityQuery->get('node')->condition('type', 'product')
+          ->condition('field_tags1.entity.name', $selectedTag, 'CONTAINS')
+          ->pager($config->get('productsPerPage'))
+          ->execute();
+    }else {
+        $nids = $this->entityQuery->get('node')->condition('type', 'product')
+          ->pager($config->get('productsPerPage'))
+          ->execute();
+    }
+    if(count($nids)==0)
+    {
+      $products=[];
+      return $products;
+    }
+    else{
+      $items = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
+      $products= $this-> getProducts($items);
+      return $products;
+    }
+}
+  /**
+   * Pretraga proizvoda po nazivu, ovde getujemo tekst koji je korisnik uneo
+   */
+  public function titleFilter(){
+    $filter=$this->request_stack->get('title_filter');
+    if($filter==null){
+    $filter='';
+    }
+    return $filter;
+}
   /**
    * Filtiramo proizvode prema tagovima koje sadrže. Ovde getujemo tag koji je korisnik izabrao na dropdown listi
    */
@@ -83,7 +107,6 @@ class ProductController extends ControllerBase {
     }
       return $selectedTag;
   }
-
   /**
    * Tagovi prosledjenog node-a
    */
@@ -97,17 +120,16 @@ class ProductController extends ControllerBase {
     }
     return $tags;
   }
-
   /**
    * Getujemo sve dostupne tagove za dropdown listu
    */ 
   public function getAllTags(){
     $tags= $this->entityTypeManager->getStorage('taxonomy_term')->loadTree('tags');
     $tags_list=[null];
-        foreach ($tags as $term) { 
-          $term_obj = $this->entityTypeManager->getStorage('taxonomy_term')->load($term->tid);
-          $name=$term_obj->getName();
-          $tags_list[]=$name;
+      foreach ($tags as $term) { 
+        $term_obj = $this->entityTypeManager->getStorage('taxonomy_term')->load($term->tid);
+        $name=$term_obj->getName();
+        $tags_list[]=$name;
     }
   return $tags_list;
 }

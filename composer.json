@@ -20,7 +20,8 @@
         "drupal/core-project-message": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/core-vendor-hardening": "^8.8",
-        "drupal/twig_xdebug": "^1.1"
+        "drupal/twig_xdebug": "^1.1",
+        "zendframework/zend-paginator": "^2.8"
     },
     "require-dev": {
     },

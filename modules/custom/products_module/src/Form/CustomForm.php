@@ -13,17 +13,17 @@ class CustomForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('products_module.settings');
 
-    $form['default_count'] = [
+    $form['productsPerPage'] = [
       '#type' => 'number',
-      '#title' => $this->t('Default count'),
-      '#default_value' => $config->get('default_count'),
+      '#title' => $this->t('Products per page'),
+      '#default_value' => $config->get('productsPerPage'),
     ];
     return parent::buildForm($form, $form_state);
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('products_module.settings');
-    $config->set('default_count', $form_state->getValue('default_count'));
+    $config->set('productsPerPage', $form_state->getValue('productsPerPage'));
     $config->save();
     parent::submitForm($form, $form_state);
   }

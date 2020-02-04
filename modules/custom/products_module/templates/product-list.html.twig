@@ -1,17 +1,22 @@
 <br/>
 <br/>
 <form action="/productlists" method="get">
-           <h5> Izaberi tag: </h5>  
-          <select id="edit-type" name="selectedTag" class="form-select">
-                    {% for tag in items.allTags %}
-                    <option selected="selected" value={{ tag }} >{{ tag }}</option>
-                    {% endfor %}
-          </select>
+     <h5> Izaberi tag: </h5>  
+     <select id="edit-type" name="selectedTag" class="form-select">
+          {% for tag in items.allTags %}
+          <option selected="selected" value={{ tag }} >{{ tag }}</option>
+          {% endfor %}
+     </select>
      <p>Unesi title:</p>
      <input type="text" name="title_filter" value="" placeholder="Search">
      <input type="submit" value="submit" />
 </form>
 <br/>
+<br/>
+{% if items.allProducts is empty %} 
+     <p> Nema rezultata za unete kriterijume. </p>
+{% endif %}
+
 {% for product in items.allProducts %}
    
      <h3>{{ product.title}}</h3>
@@ -29,6 +34,7 @@
 
 </br>
 
+{{ pager }}
 
 
     

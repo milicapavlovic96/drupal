@@ -2,6 +2,6 @@ products_module.settings:
   type: mapping
   label: 'D8 Example Module settings'
   mapping:
-    default_count:
+    productsPerPage:
       type: integer
-      label: 'Default count'
+      label: 'Products per page'
