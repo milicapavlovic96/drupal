@@ -1,0 +1,5 @@
+services:
+  products_module.book:
+      class: Drupal\products_module\Services\BookService
+      arguments: []
+        

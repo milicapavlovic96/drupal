@@ -9,6 +9,7 @@ use Drupal\node\Entity\Node;
 use \stdClass;
 use Drupal\image\Entity\ImageStyle;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\products_module\Services\BookService;
 
 class ProductController extends ControllerBase {
 
@@ -17,25 +18,29 @@ class ProductController extends ControllerBase {
   protected $submittedToken;
   protected $request_stack;
   protected $filter;
+  protected $book_service;
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
       $container->get('entity_type.manager'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('products_module.book')
     );
   }
   
-  public function __construct(QueryFactory $entityQuery, EntityTypeManagerInterface $entityTypeManager, RequestStack $request_stack) {
+  public function __construct(QueryFactory $entityQuery, EntityTypeManagerInterface $entityTypeManager, RequestStack $request_stack, BookService $book_service) {
     $this->entityQuery = $entityQuery;
     $this->entityTypeManager = $entityTypeManager;
     $this->request_stack = $request_stack->getCurrentRequest();
     $this->filter='cvet';
+    $this->book_service=$book_service;
   }
 
   public function product(){
     $products = $this->getAllProducts();
     $allTags= $this->getAllTags();
+    $nesto= $this->book_service->getBookData();
 
       return array(
           '#theme' => 'product_list',
