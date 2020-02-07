@@ -2,4 +2,8 @@ services:
   products_module.book:
       class: Drupal\products_module\Services\BookService
       arguments: []
+  products_module.twig:
+      class: Drupal\products_module\Twig\TwigExtension
+      tags:
+        - { name: twig.extension }
         

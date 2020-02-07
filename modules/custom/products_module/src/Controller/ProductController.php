@@ -56,6 +56,7 @@ class ProductController extends ControllerBase {
    */
   public function getAllProducts(){
     $config = $this->config('products_module.settings');
+    $link=$config->get('fbLink');
     $filter= $this->titleFilter();
     $selectedTag= $this-> selectedTag();
     if($filter!='' && $selectedTag!=''){
@@ -91,7 +92,7 @@ class ProductController extends ControllerBase {
       $products= $this-> getProducts($items);
       return $products;
     }
-}
+  }
   /**
    * Pretraga proizvoda po nazivu, ovde getujemo tekst koji je korisnik uneo
    */
@@ -101,7 +102,7 @@ class ProductController extends ControllerBase {
     $filter='';
     }
     return $filter;
-}
+  }
   /**
    * Filtiramo proizvode prema tagovima koje sadrže. Ovde getujemo tag koji je korisnik izabrao na dropdown listi
    */
@@ -136,9 +137,8 @@ class ProductController extends ControllerBase {
         $name=$term_obj->getName();
         $tags_list[]=$name;
     }
-  return $tags_list;
-}
-
+    return $tags_list;
+  }
   /**
    * Ovde iz svakog učitanog item-a uzimamo potrebne podatke. Vraćamo niz proizvoda. 
    */

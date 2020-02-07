@@ -10,9 +10,7 @@ function products_module_theme($existing, $type, $theme, $path){
 
     return array(
         'product_list' => array(
-            'variables' => array('items' => array(),'title' => '', 'pager' => '')
-        )
-    );
+            'variables' => array('items' => array(),'title' => '', 'pager' => '')));
 }
 
 /** 
@@ -29,3 +27,20 @@ function products_module_preprocess_node__company(&$variables) {
         $variables['products'][]=$variable;
 }
 }
+
+function products_theme_registry_alter(&$theme_registry) {
+  // You can add some conditions here in case you want
+  // to override the form template only for some reasons.
+  $theme_registry['form']['path'] = drupal_get_path('module', 'My_Module') . '/templates';
+}
+
+function products_theme_theme($existing, $type, $theme, $path) {
+  return [
+    'custom_form' => [
+      'render element' => 'form',
+    ]
+  ];
+}
+
+
+

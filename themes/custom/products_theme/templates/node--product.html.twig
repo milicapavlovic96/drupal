@@ -7,7 +7,8 @@
     </h2>
   {% endif %}
   {{ title_suffix }}
-
+{% set fbLink = menuLink() %}
+{{fbLink}}
   {% if display_submitted %}
     <footer>
       {{ author_picture }}
