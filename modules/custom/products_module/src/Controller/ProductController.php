@@ -40,6 +40,9 @@ class ProductController extends ControllerBase {
   public function product(){
     $products = $this->getAllProducts();
     $allTags= $this->getAllTags();
+    /**
+     * Ovde pozivam injectovani Book Service koji poziva external url i vraca xml file sa knjigama
+     */
     $nesto= $this->book_service->getBookData();
 
       return array(
@@ -56,7 +59,6 @@ class ProductController extends ControllerBase {
    */
   public function getAllProducts(){
     $config = $this->config('products_module.settings');
-    $link=$config->get('fbLink');
     $filter= $this->titleFilter();
     $selectedTag= $this-> selectedTag();
     if($filter!='' && $selectedTag!=''){

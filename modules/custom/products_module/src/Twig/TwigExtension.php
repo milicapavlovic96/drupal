@@ -8,7 +8,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 class TwigExtension extends AbstractExtension
 {
-
+    //Ova ekstenzija se poziva u node--product.html.twig
     public function getFunctions()
     {
         return [
@@ -26,6 +26,7 @@ class TwigExtension extends AbstractExtension
         ->condition('link.uri', 'https://www.facebook.com')
         ->execute();
         if($menu_link2==null){
+        //Ako ne postoji pravimo novi menu link   
             $menu_link = MenuLinkContent::create([
                 'title' => 'Link',
                 'link' => ['uri' => $fbLink],

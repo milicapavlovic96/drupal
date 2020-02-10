@@ -1,7 +1,10 @@
-<h3> Lista proizvoda bez parenta: </h3>
+<div{{ content_attributes }}>
+    {{ content }}
+</div>
+<h3> Products without parent: </h3>
 <div>
-{% for product in products %}
-{{ product.title }}
-<br/>
+    {% for product in products %}
+        {{ product.title }}
+    <br/>
 {% endfor %}
 </div> 
