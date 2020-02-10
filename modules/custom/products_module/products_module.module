@@ -3,7 +3,6 @@
 use Drupal\image\Entity\ImageStyle;
 use \Drupal\Core\Cache\CacheBackendInterface;
 
-
 /**
 * Implementing hook theme, article list name of theme function
 */
@@ -16,11 +15,28 @@ function products_module_theme($existing, $type, $theme, $path){
 }
 
 /** 
-* Izvlacimo listu proizvoda bez parent reference. Umesto reference na Product, mentorka mi je predlozila da dodam novi content type "Company"
-* Lista proizvoda bez parenta se vidi u menu linku "Products"
+* List of items with company parent 
 */
 
 function products_module_preprocess_node__company(&$variables) {
+
+    $nids = \Drupal::entityQuery('node')->condition('type', 'product')
+    ->condition('field_parent.entity:node.title', 'Aroma')->execute();
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+    
+    foreach($nodes as $item){
+        $title= $item->title->getValue()[0]['value'];
+        $variable['title'] = $title;
+        $variables['products'][]=$variable;
+        
+    }
+}
+
+/**
+* LOAD NODES WITHOUT PARENT FROM CACHE AND ADD MENU LINKS FOR THAT NODES AND COMPANIES
+*/
+
+function products_module_preprocess(&$variables) {
     
     $cache = \Drupal::cache();
     if($cache->get('stats.nodes')){
@@ -29,18 +45,55 @@ function products_module_preprocess_node__company(&$variables) {
     else{
         $nids = \Drupal::entityQuery('node')->condition('type', 'product')
         ->condition('field_parent.entity', 'value', 'IS NULL')->execute();
-        $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
-        $cache->set('stats.nodes', $nodes);
-        $products=$cache->get('stats.nodes')->data;
+        $products = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+        $cache->set('stats.nodes', $products);
+        //$products=$cache->get('stats.nodes')->data;
     }
     
     foreach($products as $item){
+        /** 
+        * CHECK IF MENU LINK ALREADY EXISTS
+        */
         $title= $item->title->getValue()[0]['value'];
-        $variable['title'] = $title;
-        $variables['products'][]=$variable;
-        $variables['#cache']['max-age'] = 3000;
+        $menu_link2 = $query = \Drupal::entityQuery('menu_link_content')
+        ->condition('menu_name', 'main')
+        ->condition('link.uri', 'entity:node/' . $item->id())
+        ->execute();
+         if($menu_link2==null){
+            $menuLink = \Drupal\menu_link_content\Entity\MenuLinkContent::create([
+            'link' => ['uri' => 'entity:node/' . $item->id()],
+            'title' => $title,
+            'menu_name' => 'main'
+            ]);
+        
+            $menuLink->save();
+        }
+    }
+    /**
+    * CREATE MENU LINK FOR COMPANY
+    */
+    $nids = \Drupal::entityQuery('node')->condition('type', 'company')->execute();
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+    foreach($nodes as $item){
+        $title= $item->title->getValue()[0]['value'];
+        $menu_link2 = $query = \Drupal::entityQuery('menu_link_content')
+        ->condition('menu_name', 'main')
+        ->condition('link.uri', 'entity:node/' . $item->id())
+        ->execute();
+        /** CHECK IF MENU LINK ALREADY EXISTS
+        *
+        */
+         if($menu_link2==null){
+            $menuLink = \Drupal\menu_link_content\Entity\MenuLinkContent::create([
+            'link' => ['uri' => 'entity:node/' . $item->id()],
+            'title' => $title,
+            'menu_name' => 'main',
+            ]);
+        
+            $menuLink->save();
     }
 }
-
+ 
+}
 
 

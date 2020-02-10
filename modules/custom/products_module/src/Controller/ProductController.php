@@ -150,6 +150,7 @@ class ProductController extends ControllerBase {
       $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
       $description= $item->get('field_description')->value;
       $field_tags= $this->getNodeTags($item);
+      
 
       $product = array(
         'title'=> $title,  
