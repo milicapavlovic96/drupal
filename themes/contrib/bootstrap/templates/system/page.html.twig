@@ -67,7 +67,7 @@
         <div class="{{ container }}">
       {% endif %}
       <div class="navbar-header">
-        {{ page.navigation }}
+          {{ page.navigation }}
         {# .btn-navbar is used as the toggle for collapsed navbar content #}
         {% if page.navigation_collapsible %}
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
@@ -80,7 +80,7 @@
       </div>
 
       {# Navigation (collapsible) #}
-      {% if page.navigation_collapsible %}
+     {% if page.navigation_collapsible %}
         <div id="navbar-collapse" class="navbar-collapse collapse">
           {{ page.navigation_collapsible }}
         </div>
@@ -90,7 +90,7 @@
       {% endif %}
     </header>
   {% endblock %}
-{% endif %}
+{% endif %} 
 
 {# Main #}
 {% block main %}

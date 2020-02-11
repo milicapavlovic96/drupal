@@ -4,3 +4,21 @@
  */
  .navbar-static-top {
     z-index: 100;}
+
+ul{
+   padding: 0;
+   margin: 0;
+   vertical-align: bottom;
+}
+
+.navbar-nav > li{
+   padding-left:20px;
+   padding-right:20px;
+   list-style-type: none;
+
+ }  
+ .navbar-nav > li > a {
+   position: relative;
+   display: block;
+   padding: 15px;
+ }

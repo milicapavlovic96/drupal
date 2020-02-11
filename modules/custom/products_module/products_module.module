@@ -20,24 +20,42 @@ function products_module_theme($existing, $type, $theme, $path){
 
 function products_module_preprocess_node__company(&$variables) {
 
+    $request = \Drupal::request();
+    $route_match = \Drupal::routeMatch();
+    $page_title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
+
     $nids = \Drupal::entityQuery('node')->condition('type', 'product')
-    ->condition('field_parent.entity:node.title', 'Aroma')->execute();
+    ->condition('field_parent.entity:node.title', $page_title)->execute();
     $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
     
     foreach($nodes as $item){
         $title= $item->title->getValue()[0]['value'];
         $variable['title'] = $title;
-        $variables['products'][]=$variable;
-        
+        $variables['products'][]=$variable;   
     }
 }
-
 /**
 * LOAD NODES WITHOUT PARENT FROM CACHE AND ADD MENU LINKS FOR THAT NODES AND COMPANIES
 */
+function products_module_preprocess_menu(&$variables){
+    /**
+    * CREATE MENU LINK FOR COMPANY
+    */
+    $menu_link=null;
+    $nids = \Drupal::entityQuery('node')->condition('type', 'company')->execute();
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+    foreach($nodes as $item){
+        $title= $item->title->getValue()[0]['value'];
+        $menu_link=array(
+            'link' => '/node/' . $item->id(),
+            'title' => $title,
+            );
+        $variables['companies'][]=$menu_link;
+    }
 
-function products_module_preprocess(&$variables) {
-    
+    /**
+     * CREATE MENULINK FOR PRODUCTS WITHOUT PARENTS
+     */
     $cache = \Drupal::cache();
     if($cache->get('stats.nodes')){
         $products=$cache->get('stats.nodes')->data;
@@ -47,53 +65,16 @@ function products_module_preprocess(&$variables) {
         ->condition('field_parent.entity', 'value', 'IS NULL')->execute();
         $products = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
         $cache->set('stats.nodes', $products);
-        //$products=$cache->get('stats.nodes')->data;
-    }
-    
+    }   
     foreach($products as $item){
-        /** 
-        * CHECK IF MENU LINK ALREADY EXISTS
-        */
         $title= $item->title->getValue()[0]['value'];
-        $menu_link2 = $query = \Drupal::entityQuery('menu_link_content')
-        ->condition('menu_name', 'main')
-        ->condition('link.uri', 'entity:node/' . $item->id())
-        ->execute();
-         if($menu_link2==null){
-            $menuLink = \Drupal\menu_link_content\Entity\MenuLinkContent::create([
-            'link' => ['uri' => 'entity:node/' . $item->id()],
+        $menu_link=array(
+            'link' => '/node/' . $item->id(),
             'title' => $title,
-            'menu_name' => 'main'
-            ]);
-        
-            $menuLink->save();
+            );
+        $variables['products'][]=$menu_link;
         }
     }
-    /**
-    * CREATE MENU LINK FOR COMPANY
-    */
-    $nids = \Drupal::entityQuery('node')->condition('type', 'company')->execute();
-    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
-    foreach($nodes as $item){
-        $title= $item->title->getValue()[0]['value'];
-        $menu_link2 = $query = \Drupal::entityQuery('menu_link_content')
-        ->condition('menu_name', 'main')
-        ->condition('link.uri', 'entity:node/' . $item->id())
-        ->execute();
-        /** CHECK IF MENU LINK ALREADY EXISTS
-        *
-        */
-         if($menu_link2==null){
-            $menuLink = \Drupal\menu_link_content\Entity\MenuLinkContent::create([
-            'link' => ['uri' => 'entity:node/' . $item->id()],
-            'title' => $title,
-            'menu_name' => 'main',
-            ]);
-        
-            $menuLink->save();
-    }
-}
- 
-}
+
 
 
