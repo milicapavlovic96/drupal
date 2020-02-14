@@ -16,7 +16,7 @@ ul{
    padding-right:20px;
    list-style-type: none;
 
- }  
+ }
  .navbar-nav > li > a {
    position: relative;
    display: block;
@@ -26,3 +26,4 @@ ul{
  .fade{
     opacity: 1;
  }
+
