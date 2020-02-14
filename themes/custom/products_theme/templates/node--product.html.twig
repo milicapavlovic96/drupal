@@ -34,12 +34,20 @@
   <div>{{ content.field_tags1 }}</div>
 
   <div class="slider">
-    {{ content.field_slider }}
-{#    {% for key,value in content.field_slider %}#}
-{#      {% if key matches '/^[-+]?[0-9]*\\.?[0-9]+$/' %}#}
-{#       <div> {{ value }} </div>#}
-{#      {% endif %}#}
-{#    {% endfor %}#}
+
+    {% for item in content.field_slider['#items'] %}
+
+      {{ breakpoint('item', item, item.entity) }}
+      {{ loop.index }}
+      <div class="textcontainer">
+        <img src="{{ file_url(item.entity.field_slide_reference.entity.field_image.entity.uri.value) }}"/>
+        <div class="title">
+          {{ item.entity.field_slide_reference.entity.field_title_slide.value }}
+          {{ item.entity.field_slide_reference.entity.field_text_long.value }}
+        </div>
+      </div>
+
+    {% endfor %}
   </div>
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>

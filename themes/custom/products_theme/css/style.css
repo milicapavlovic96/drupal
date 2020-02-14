@@ -27,3 +27,24 @@ ul{
     opacity: 1;
  }
 
+.textcontainer {
+  position: relative;
+  text-align: center;
+  color: white;
+  font-smoothing: antialiased;
+  background-color: #fac564;
+}
+
+.title{
+  position: absolute;
+  top: 50%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-size: 40px;
+  text-align: left;
+}
+
+.description{
+
+}
