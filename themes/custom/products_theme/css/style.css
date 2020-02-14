@@ -22,3 +22,7 @@ ul{
    display: block;
    padding: 15px;
  }
+
+ .fade{
+    opacity: 1;
+ }

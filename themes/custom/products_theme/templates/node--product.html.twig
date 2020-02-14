@@ -1,5 +1,10 @@
-<article{{ attributes }}>
+{{ breakpoint() }}
 
+<head>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.3.11/slick.css"/>
+</head>
+
+<article{{ attributes }}>
   {{ title_prefix }}
   {% if label and not page %}
     <h2{{ title_attributes }}>
@@ -16,9 +21,41 @@
       </div>
     </footer>
   {% endif %}
-
-  <div{{ content_attributes }}>
-    {{ content }}
-  </div>
-  
 </article>
+
+<body>
+  {% for image in content.field_images %}
+    <img src="{{ file_url(image.entity.uri.value) }}">
+  {% endfor %}
+  <div>{{ content.field_description }}</div>
+  <div>{{ content.field_parent }}</div>
+  <div>{{ content.field_proje }}</div>
+  <div>{{ content.field_tags1 }}</div>
+  <div class="fade">
+    {% for key,value in content.field_slider %}
+      {% if key matches '/^[-+]?[0-9]*\\.?[0-9]+$/' %}
+       <div> {{ value }} </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.3.11/slick.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.fade').slick({
+        dots: true,
+        infinite: true,
+        speed: 700,
+        autoplay:true,
+        autoplaySpeed: 2000,
+        arrows:false,
+        slidesToShow: 1,
+        slidesToScroll: 1
+      });
+    });
+  </script>
+
+</body>

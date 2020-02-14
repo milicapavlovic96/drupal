@@ -2,26 +2,24 @@
 
 use Drupal\image\Entity\ImageStyle;
 use \Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\paragraphs\Entity\Paragraph;
 
 /**
 * Implementing hook theme, article list name of theme function
 */
-
 function products_module_theme($existing, $type, $theme, $path){
 
     return array(
         'product_list' => array(
             'variables' => array('items' => array(),'title' => '', 'pager' => '')));
 }
-
 /** 
 * List of items with company parent 
 */
-
 function products_module_preprocess_node__company(&$variables) {
 
     $parent = \Drupal::routeMatch()->getParameter('node');
-    
+    if($parent!=null){
     $nids = \Drupal::entityQuery('node')->condition('type', 'product')
     ->condition('field_parent.entity:node', $parent->id())->execute();
     $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
@@ -31,6 +29,7 @@ function products_module_preprocess_node__company(&$variables) {
         $variable['title'] = $title;
         $variables['products'][]=$variable;   
     }
+} 
 }
 /**
 * LOAD NODES WITHOUT PARENT FROM CACHE AND ADD MENU LINKS FOR THAT NODES AND COMPANIES

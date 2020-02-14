@@ -146,8 +146,14 @@ class ProductController extends ControllerBase {
    */
   public function getProducts($items){
     foreach($items as $item){
+      $img_urls=[];
       $title= $item->title->value;
-      $image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
+      foreach ($item->field_images as $image) {
+        if ($image->entity) {
+          $img_urls[] = $image->entity->url();
+        }
+      }
+      //$image= ImageStyle::load('large')->buildUrl($item->field_images->entity->getFileUri());
       $description= $item->get('field_description')->value;
       $field_tags= $this->getNodeTags($item);
       
@@ -155,7 +161,8 @@ class ProductController extends ControllerBase {
       $product = array(
         'title'=> $title,  
         'description'=> $description,
-        'image' => $image,
+        //'image' => $image,
+        'image' => $img_urls,
         'tags' => $field_tags
       );
       $products[]=$product;
